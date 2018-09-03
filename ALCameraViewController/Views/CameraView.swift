@@ -13,7 +13,7 @@ public class CameraView: UIView {
     
     var session: AVCaptureSession!
     var input: AVCaptureDeviceInput!
-    var device: AVCaptureDevice!
+    var device: AVCaptureDevice?
     var imageOutput: AVCaptureStillImageOutput!
     var preview: AVCaptureVideoPreviewLayer!
     
@@ -28,7 +28,8 @@ public class CameraView: UIView {
         session.sessionPreset = AVCaptureSession.Preset.photo
 
         device = cameraWithPosition(position: currentPosition)
-        if let device = device , device.hasFlash {
+        guard let device = device else { return }
+        if device.hasFlash {
             do {
                 try device.lockForConfiguration()
                 device.flashMode = .auto
@@ -193,7 +194,8 @@ public class CameraView: UIView {
             completion(nil)
             return
         }
-
+        guard let device = device else { return }
+        
         let size = frame.size
 
         cameraQueue.sync {
@@ -264,6 +266,7 @@ public class CameraView: UIView {
             device = cameraWithPosition(position: currentPosition)
         }
         
+        guard let device = device else { return }
         guard let newInput = try? AVCaptureDeviceInput(device: device) else {
             return
         }

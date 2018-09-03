@@ -212,4 +212,10 @@ internal class CropOverlay: UIView {
 
         return view
     }
+    
+    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        if !isResizable && !isMovable { return false }
+        return super.point(inside: point, with: event)
+    }
+    
 }
